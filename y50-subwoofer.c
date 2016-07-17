@@ -119,7 +119,8 @@ static void set_headphones_plugged(int* plugged)
 
 
 
-static long get_master_volume() {
+static long get_master_volume()
+{
     snd_mixer_t *handle;
     snd_mixer_open(&handle, 0);
     snd_mixer_attach(handle, Y50_CTL_NAME);
