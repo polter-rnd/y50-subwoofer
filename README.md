@@ -18,4 +18,5 @@ To build you need only C compiler and development files for ALSA library (**gcc*
 $ git clone https://github.com/polter-rnd/y50-subwoofer.git
 $ cd y50-subwoofer
 $ make install
+$ service y50-subwoofer start
 ```

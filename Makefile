@@ -13,4 +13,6 @@ install: y50-subwoofer
 	systemctl enable y50-subwoofer
 
 uninstall:
+	systemctl disable y50-subwoofer
+	rm -f /etc/systemd/system/y50-subwoofer.service
 	rm -f /usr/local/bin/y50-subwoofer
