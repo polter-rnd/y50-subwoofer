@@ -1,7 +1,5 @@
-VERSION = 0.1
-
 CC = gcc
-CFLAGS = -Wall -Wextra -O2 -g
+CFLAGS = -Wall -Wextra -O2
 
 y50-subwoofer: y50-subwoofer.o
 	$(CC) -o $@ y50-subwoofer.o -lasound
@@ -9,7 +7,8 @@ y50-subwoofer: y50-subwoofer.o
 clean:
 	rm -f y50-subwoofer *.o
 
-dist:
-	cd ..; mv y50-subwoofer y50-subwoofer-$(VERSION); \
-	tar cfz y50-subwoofer-$(VERSION).tar.gz --exclude='.git*' y50-subwoofer-$(VERSION); \
-	mv y50-subwoofer-$(VERSION) y50-subwoofer
+install: y50-subwoofer
+	install ./y50-subwoofer /usr/local/y50-subwoofer
+
+uninstall:
+	rm -f /usr/local/bin/y50-subwoofer
