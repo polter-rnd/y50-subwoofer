@@ -152,9 +152,12 @@ static void set_lfe_volume(int fd, long volume)
     char lfe_volume = Y50_LFE_VOLUME_MAX * volume / 100;
 
     const int verbs[] = {
-        HDA_VERB(0x03, AC_VERB_SET_AMP_GAIN_MUTE, (0xa0 << 8) | lfe_volume),
-        HDA_VERB(0x03, AC_VERB_SET_AMP_GAIN_MUTE, (0x90 << 8) | lfe_volume),
-        HDA_VERB(0x1a, AC_VERB_SET_PIN_WIDGET_CONTROL, (lfe_volume > 0) ? 0x25 : 0),
+        HDA_VERB(0x03, AC_VERB_SET_AMP_GAIN_MUTE,
+                 (lfe_volume > 0) ? (0xa0 << 8) | lfe_volume : 0),
+        HDA_VERB(0x03, AC_VERB_SET_AMP_GAIN_MUTE,
+                 (lfe_volume > 0) ? (0x90 << 8) | lfe_volume : 0),
+        HDA_VERB(0x1a, AC_VERB_SET_PIN_WIDGET_CONTROL,
+                 (lfe_volume > 0) ? 0x25 : 0),
         0
     };
 
