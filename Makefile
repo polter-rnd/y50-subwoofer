@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -O2
+CFLAGS = -Wall -Wextra -O2 -g
 
 y50-subwoofer: y50-subwoofer.o
 	$(CC) -o $@ y50-subwoofer.o -lasound
