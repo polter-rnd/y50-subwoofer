@@ -1,4 +1,4 @@
-VERSION = 0.4
+VERSION = 0.1
 
 CC = gcc
 CFLAGS = -Wall -Wextra -O2 -g
