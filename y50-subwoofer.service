@@ -1,10 +1,10 @@
 [Unit]
-Description=Speaker LFE Start
+Description=Y50 subwoofer manager
 After=sound.target
 Requires=sound.target
 
 [Service]
-ExecStart=/usr/local/bin/y50-subwoofer
+ExecStart=/usr/bin/y50-subwoofer
 
 [Install]
 WantedBy=multi-user.target
