@@ -1,6 +1,6 @@
 /*
  * Utility for managing Lenovo Y50 subwoofer (based on hda-verb)
- * Version 0.1
+ * Version 0.1.4
  *
  * Copyright (c) 2016 Pavel Artsishevsky <polter.rnd@gmail.com>
  * Copyright (c) 2008 Takashi Iwai <tiwai@suse.de>
@@ -14,6 +14,7 @@
 #include <stdint.h>
 #include <poll.h>
 #include <fcntl.h>
+#include <signal.h>
 #include <sys/ioctl.h>
 
 #include <alsa/asoundlib.h>
@@ -40,8 +41,10 @@
 
 
 // Global plugged flag
-int headphones_plugged = 0;
+static int headphones_plugged = 0;
 
+// Done flag
+static volatile sig_atomic_t doneflag = 0;
 
 
 static int open_ctl(const char *name, snd_ctl_t **ctlp)
@@ -81,6 +84,7 @@ static int open_hwdep(const char* name, int* pfd) {
         close(fd);
         return 1;
     }
+
     if (version < HDA_HWDEP_VERSION) {
         fprintf(stderr, "Invalid version number 0x%x\n", version);
         fprintf(stderr, "Looks like an invalid hwdep device...\n");
@@ -151,6 +155,7 @@ static long get_master_volume()
 static void set_lfe_volume(int fd, long volume)
 {
     char lfe_volume = Y50_LFE_VOLUME_MAX * volume / 100;
+    struct hda_verb_ioctl val = { 0 };
 
     const int verbs[] = {
         HDA_VERB(0x03, AC_VERB_SET_AMP_GAIN_MUTE,
@@ -163,7 +168,6 @@ static void set_lfe_volume(int fd, long volume)
     };
 
     for (int i = 0; verbs[i] > 0; ++i) {
-        struct hda_verb_ioctl val;
         val.verb = verbs[i];
         if (ioctl(fd, HDA_IOCTL_VERB_WRITE, &val) < 0) {
             perror("ioctl");
@@ -176,7 +180,7 @@ static void set_lfe_volume(int fd, long volume)
 
 static void lfe_initialize(int fd)
 {
-    struct hda_verb_ioctl val;
+    struct hda_verb_ioctl val = { 0 };
 
     const int verbs_init[] = {
         HDA_VERB(0x17, AC_VERB_SET_POWER_STATE,        0),
@@ -237,6 +241,22 @@ static int handle_event(int hwdep_fd, snd_ctl_t *ctl)
 
 
 
+void handle_signal(int signo)
+{
+    switch (signo) {
+    case SIGINT:
+    case SIGHUP:
+    case SIGTERM:
+        doneflag = 1;
+
+    default:
+        break;
+    }
+}
+
+
+
+
 int main(int argc, char **argv)
 {
     int hwdep_fd;
@@ -244,6 +264,16 @@ int main(int argc, char **argv)
 
     (void) argc;
     (void) argv;
+
+    // Setup the signal handler
+    struct sigaction sa = { 0 };
+    sa.sa_handler = &handle_signal;
+
+    // Handle standard signals to quit properly
+    sigemptyset(&sa.sa_mask);
+    sigaction(SIGINT,  &sa, NULL);
+    sigaction(SIGHUP,  &sa, NULL);
+    sigaction(SIGTERM, &sa, NULL);
 
     // Open control and hwdep devices
     if (open_hwdep(Y50_HWDEP_DEVICE, &hwdep_fd) != 0
@@ -259,13 +289,17 @@ int main(int argc, char **argv)
     set_lfe_volume(hwdep_fd, headphones_plugged ? 0 : get_master_volume());
 
     // Poll events
-    while (1) {
+    while (!doneflag) {
         struct pollfd fds;
         snd_ctl_poll_descriptors(ctl, &fds, 1);
 
         if (poll(&fds, 1, -1) <= 0) {
-            perror("poll");
-            return EXIT_FAILURE;
+            if (errno == EINTR) {
+                continue;
+            } else {
+                perror("poll");
+                break;
+            }
         }
 
         unsigned short revents;
