@@ -31,12 +31,14 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %post
-/bin/systemctl enable %{name}.service 
+/bin/systemctl enable %{name}.service
+/bin/systemctl enable %{name}-resume.service
 /bin/systemctl start %{name}.service
 
 
 %preun
 /bin/systemctl stop %{name}.service
+/bin/systemctl disable %{name}-resume.service
 /bin/systemctl disable %{name}.service
 
 
