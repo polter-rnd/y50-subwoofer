@@ -1,5 +1,5 @@
 Name:           y50-subwoofer
-Version:        0.1.5
+Version:        0.1.7
 Release:        1%{?dist}
 Summary:        Daemon for adjusting Lenovo Y50 subwoofer
 
