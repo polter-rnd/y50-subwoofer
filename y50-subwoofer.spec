@@ -1,5 +1,5 @@
 Name:           y50-subwoofer
-Version:        0.1.3
+Version:        0.1.5
 Release:        1%{?dist}
 Summary:        Daemon for adjusting Lenovo Y50 subwoofer
 
@@ -27,6 +27,7 @@ make CFLAGS="%{optflags}"
 rm -rf $RPM_BUILD_ROOT
 %{__install} -Dm 755 %{_builddir}/%{name}-%{version}/%{name} $RPM_BUILD_ROOT/%{_bindir}/%{name}
 %{__install} -Dm 644 %{_builddir}/%{name}-%{version}/%{name}.service $RPM_BUILD_ROOT/%{_unitdir}/%{name}.service
+%{__install} -Dm 644 %{_builddir}/%{name}-%{version}/%{name}.service $RPM_BUILD_ROOT/%{_unitdir}/%{name}-resume.service
 
 
 %post
@@ -44,8 +45,13 @@ rm -rf $RPM_BUILD_ROOT
 %doc README.md
 %{_bindir}/%{name}
 %{_unitdir}/%{name}.service
+%{_unitdir}/%{name}-resume.service
 
 
 %changelog
-* Sun Jul 17 2016 Pavel Artsishevsky <polter.rnd@gmail.com> 0.1.3-1
+* Mon Jan 2 2017 Paul Artsishevsky <polter.rnd@gmail.com> 0.1.5-1
+- Updated to Fedora 25
+- Added resume service to restart y50-subwoofer on wake up
+
+* Sun Jul 17 2016 Paul Artsishevsky <polter.rnd@gmail.com> 0.1.3-1
 - Initial version of the package
