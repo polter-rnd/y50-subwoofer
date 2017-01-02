@@ -27,7 +27,7 @@ make CFLAGS="%{optflags}"
 rm -rf $RPM_BUILD_ROOT
 %{__install} -Dm 755 %{_builddir}/%{name}-%{version}/%{name} $RPM_BUILD_ROOT/%{_bindir}/%{name}
 %{__install} -Dm 644 %{_builddir}/%{name}-%{version}/%{name}.service $RPM_BUILD_ROOT/%{_unitdir}/%{name}.service
-%{__install} -Dm 644 %{_builddir}/%{name}-%{version}/%{name}.service $RPM_BUILD_ROOT/%{_unitdir}/%{name}-resume.service
+%{__install} -Dm 644 %{_builddir}/%{name}-%{version}/%{name}-resume.service $RPM_BUILD_ROOT/%{_unitdir}/%{name}-resume.service
 
 
 %post
