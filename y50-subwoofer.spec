@@ -8,6 +8,7 @@ URL:            https://github.com/polter-rnd/y50-subwoofer
 Source0:        https://github.com/polter-rnd/y50-subwoofer/archive/v%{version}.zip
 
 BuildRequires:  alsa-lib-devel
+BuildRequires:  systemd-units
 
 
 %description

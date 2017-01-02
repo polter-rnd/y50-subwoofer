@@ -9,7 +9,7 @@ Main features:
   - Adjusts subwoofer volume when master channel volume changes.
 
 ### Version
-0.1.4
+0.1.7
 
 ### Installation
 COPR for Fedora: https://copr.fedorainfracloud.org/coprs/polter/y50-subwoofer
