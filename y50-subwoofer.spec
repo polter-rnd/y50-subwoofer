@@ -1,12 +1,13 @@
 Name:           y50-subwoofer
 Version:        0.1.7
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Daemon for adjusting Lenovo Y50 subwoofer
 
 License:        GPLv2+
 URL:            https://github.com/polter-rnd/y50-subwoofer
 Source0:        https://github.com/polter-rnd/y50-subwoofer/archive/v%{version}.zip
 
+BuildRequired:  gcc
 BuildRequires:  alsa-lib-devel
 BuildRequires:  systemd-units
 
@@ -52,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Dec 5 2018 Paul Artsishevsky <polter.rnd@gmail.com> 0.1.5-2
+- Updated to Fedora 29
+
 * Mon Jan 2 2017 Paul Artsishevsky <polter.rnd@gmail.com> 0.1.5-1
 - Updated to Fedora 25
 - Added resume service to restart y50-subwoofer on wake up
